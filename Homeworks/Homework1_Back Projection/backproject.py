@@ -8,12 +8,6 @@ import scipy.io
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-# backprojecting a depth image to a 3D point cloud in the camera coordinate frame
-# input: depth with shape (H, W)
-# input: intrinsic_matrix, a 3x3 matrix
-# output: a point cloud, pcloud with shape (H, W, 3)
-#TODO: implement this function: for each 2D coordinate x, its 3D location X = dK^-1x (x is a homogeneous coordinate, d is its depth value, K is the intrinsic matrix). See slide 26 in lecture 3.
 def backproject(depth, intrinsic_matrix):
     H, W = depth.shape
 
