@@ -27,8 +27,8 @@ def backproject(depth, intrinsic_matrix):
     camera_coords = homogeneous_coords @ intrinsic_matrix_inv.T  # Shape: (H*W, 3)
 
     # Multiply by the depth values
-    depth_flat = depth.flatten()[:, np.newaxis]  # Shape: (H*W, 1)
-    point_cloud = camera_coords * depth_flat  # Shape: (H*W, 3)
+    depth_flat = depth.flatten()[:, np.newaxis] 
+    point_cloud = camera_coords * depth_flat  
 
     # Reshape back to (H, W, 3)
     point_cloud = point_cloud.reshape(H, W, 3)
