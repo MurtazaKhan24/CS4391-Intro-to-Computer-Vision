@@ -21,6 +21,7 @@ def bilateral_filtering(
     img = img / 255
     img = img.astype("float32")
     img_filtered = np.zeros(img.shape) # Placeholder of the filtered image
+    xsize, ysize = img.shape
     
     # Todo: For each pixel position [i, j], you need to compute the filtered output: img_filtered[i, j]
     # step 1: compute kernel_sizexkernel_size spatial and intensity range weights of the bilateral filter in terms of spatial_variance and intensity_variance. 
@@ -31,7 +32,19 @@ def bilateral_filtering(
     # ********************************
     # Your code is here.
     # ********************************
-    
+    Wp = 0
+    filtered_pixel = 0
+    padding = kernel_size // 2
+    img_padded = np.pad(img, ((padding, padding), (padding, padding)), mode='constant', constant_values=0)
+    for i in range(kernel_size // 2, xsize - kernel_size // 2):
+        for j in range(kernel_size // 2, ysize - kernel_size // 2):
+           
+            spatial_weight = np.exp(-(k**2 + l**2) / (2 * spatial_variance))
+            intensity_weight = np.exp(-((img[i, j] - img[i + k, j + l])**2) / (2 * intensity_variance))
+            weight = spatial_weight * intensity_weight
+            Wp += weight
+            filtered_pixel += weight * img[i + k, j + l]
+            img_filtered[i, j] = filtered_pixel / Wp
     
     img_filtered = img_filtered * 255
     img_filtered = np.uint8(img_filtered)

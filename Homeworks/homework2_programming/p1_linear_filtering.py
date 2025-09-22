@@ -30,10 +30,6 @@ def linear_local_filtering(
             # Todo: For current position [i, j], you need to compute the filtered pixel value: img_filtered[i, j] 
             # using the kernel weights: filter_weights and the neighboring pixels of img[i, j] in the kernel_sizexkernel_size local window
             # The filtering formula can be found in slide 3 of lecture 6
-
-            # ********************************
-            # Your code is here.
-            # ********************************
             local_window = img[i - kernel_size // 2 : i + kernel_size // 2 + 1, 
                                j - kernel_size // 2 : j + kernel_size // 2 + 1]
 
