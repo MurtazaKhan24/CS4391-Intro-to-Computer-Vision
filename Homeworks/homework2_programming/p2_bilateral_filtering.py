@@ -19,23 +19,30 @@ def bilateral_filtering(
     """
 
     img = img / 255.0
-    img = img.astype("float32")
-    img_filtered = np.zeros_like(img)
-    xsize, ysize = img.shape
+    img = img.astype("float32")  # input image
+    img_filtered = np.zeros(img.shape)  # placeholder of filtered image
+    sizeX, sizeY = img.shape
 
-    padding = kernel_size // 2
-    img_padded = np.pad(img, ((padding, padding), (padding, padding)), mode="reflect")
+    pad_size = kernel_size // 2
+    img_padded = np.pad(img, ((pad_size, pad_size), (pad_size, pad_size)), mode="reflect")
 
-    for i in range(xsize):
-        for j in range(ysize):
+    # filtering for each pixel
+    for i in range(sizeX):
+        for j in range(sizeY):
             Wp = 0.0
-            filtered_pixel = 0.0
+            filtered_val = 0.0
 
-            center_val = img_padded[i + padding, j + padding]
+            center_val = img_padded[i + pad_size, j + pad_size]
 
-            for k in range(-padding, padding + 1):
-                for l in range(-padding, padding + 1):
-                    neighbor_val = img_padded[i + k + padding, j + l + padding]
+            # local window around (i, j)
+            local_window = img_padded[
+                i : i + kernel_size,
+                j : j + kernel_size
+            ]
+
+            for k in range(-pad_size, pad_size + 1):
+                for l in range(-pad_size, pad_size + 1):
+                    neighbor_val = img_padded[i + k + pad_size, j + l + pad_size]
 
                     # Spatial Gaussian
                     spatial_weight = np.exp(-(k**2 + l**2) / (2 * spatial_variance))
@@ -45,9 +52,9 @@ def bilateral_filtering(
 
                     weight = spatial_weight * intensity_weight
                     Wp += weight
-                    filtered_pixel += weight * neighbor_val
+                    filtered_val += weight * neighbor_val
 
-            img_filtered[i, j] = filtered_pixel / Wp
+            img_filtered[i, j] = filtered_val / Wp
 
     img_filtered = (img_filtered * 255).astype(np.uint8)
     return img_filtered

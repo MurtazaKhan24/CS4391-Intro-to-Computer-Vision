@@ -19,21 +19,57 @@ def nlm_filtering(
     """
 
     img = img / 255
-    img = img.astype("float32")
-    img_filtered = np.zeros(img.shape) # Placeholder of the filtered image
-    
-    # Todo: For each pixel position [i, j], you need to compute the filtered output: img_filtered[i, j] using a non-local means filter
-    # step 1: compute window_sizexwindow_size filter weights of the non-local means filter in terms of intensity_variance. 
-    # step 2: compute the filtered pixel img_filtered[i, j] using the obtained kernel weights and the pixel values in the search window
-    # Please see slides 30 and 31 of lecture 6. Clarification: the patch_size refers to the size of small image patches (image content in yellow, 
-    # red, and blue boxes in the slide 30); intensity_variance denotes sigma^2 in slide 30; the window_size is the size of the search window as illustrated in slide 31.
-    # Tip: use zero-padding to address the black border issue. 
+    img = img.astype("float32")  # input image
+    img_filtered = np.zeros(img.shape)  # Placeholder of the filtered image
 
-    # ********************************
-    # Your code is here.
-    # ********************************
+    sizeX, sizeY = img.shape
+    patch_radius = patch_size // 2
+    window_radius = window_size // 2
 
-            
+    # zero-padding for boundary handling
+    pad_size = window_radius + patch_radius
+    padded = np.pad(img, pad_size, mode="reflect")
+
+    # filtering for each pixel
+    for i in range(sizeX):
+        for j in range(sizeY):
+            # reference patch centered at (i, j)
+            ref_patch = padded[
+                i + pad_size - patch_radius : i + pad_size + patch_radius + 1,
+                j + pad_size - patch_radius : j + pad_size + patch_radius + 1,
+            ]
+
+            weights = []
+            neighbors = []
+
+            # iterate over search window
+            for wi in range(-window_radius, window_radius + 1):
+                for wj in range(-window_radius, window_radius + 1):
+                    ni = i + wi
+                    nj = j + wj
+
+                    # neighbor patch
+                    neigh_patch = padded[
+                        ni + pad_size - patch_radius : ni + pad_size + patch_radius + 1,
+                        nj + pad_size - patch_radius : nj + pad_size + patch_radius + 1,
+                    ]
+
+                    # squared distance between patches
+                    dist2 = np.sum((ref_patch - neigh_patch) ** 2)
+
+                    # compute weight
+                    w = np.exp(-dist2 / intensity_variance)
+                    weights.append(w)
+                    neighbors.append(padded[ni + pad_size, nj + pad_size])
+
+            # normalize weights
+            weights = np.array(weights)
+            neighbors = np.array(neighbors)
+            weights /= np.sum(weights)
+
+            # compute filtered pixel
+            img_filtered[i, j] = np.sum(weights * neighbors)
+
     img_filtered = img_filtered * 255
     img_filtered = np.uint8(img_filtered)
     return img_filtered
