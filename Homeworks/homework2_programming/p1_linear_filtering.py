@@ -26,14 +26,10 @@ def linear_local_filtering(
     # filtering for each pixel
     for i in range(kernel_size // 2, sizeX - kernel_size // 2):
         for j in range(kernel_size // 2, sizeY - kernel_size // 2):
-
-            # Todo: For current position [i, j], you need to compute the filtered pixel value: img_filtered[i, j] 
-            # using the kernel weights: filter_weights and the neighboring pixels of img[i, j] in the kernel_sizexkernel_size local window
-            # The filtering formula can be found in slide 3 of lecture 6
             local_window = img[i - kernel_size // 2 : i + kernel_size // 2 + 1, 
                                j - kernel_size // 2 : j + kernel_size // 2 + 1]
 
-            img_filtered[i, j] = np.sum(local_window * filter_weights) # todo: replace 0 with the correct updated pixel value
+            img_filtered[i, j] = np.sum(local_window * filter_weights) 
 
     img_filtered = img_filtered * 255
     img_filtered = np.uint8(img_filtered)
@@ -45,8 +41,6 @@ def gauss_kernel_generator(kernel_size: int, spatial_variance: float) -> np.ndar
     Homework 2 Part 2
     Create a kernel_sizexkernel_size gaussian kernel of given the variance. 
     """
-    # Todo: given variance: spatial_variance and kernel size, you need to create a kernel_sizexkernel_size gaussian kernel
-    # Please check out the formula in slide 15 of lecture 6 to learn how to compute the gaussian kernel weight: g[k, l] at each position [k, l].
     kernel_weights = np.zeros((kernel_size, kernel_size))
     center = kernel_size // 2
     constant = 1 / (2 * np.pi * spatial_variance)
