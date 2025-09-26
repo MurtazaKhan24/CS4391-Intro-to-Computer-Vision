@@ -24,7 +24,7 @@ def backproject(depth, intrinsic_matrix):
     intrinsic_matrix_inv = np.linalg.inv(intrinsic_matrix)
 
     # Apply the inverse intrinsic matrix to the homogeneous coordinates
-    camera_coords = homogeneous_coords @ intrinsic_matrix_inv.T  # Shape: (H*W, 3)
+    camera_coords = homogeneous_coords @ intrinsic_matrix_inv.T 
 
     # Multiply by the depth values
     depth_flat = depth.flatten()[:, np.newaxis] 
