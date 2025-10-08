@@ -15,9 +15,15 @@ import matplotlib.pyplot as plt
 # for example, if the 10th element in index is 100, that means des1[10, :] matches to des2[100, :]
 # idea: for each descriptor in des1, find its matching by computing L2 distance with all the descriptors in des2; the best matching corresponds to the smallest L2 distance
 def sift_matching(des1, des2):
+    # Initialize an array to store the indices of the best matches
+    index = np.zeros(des1.shape[0], dtype=int)
 
-
-
+    # Iterate through each descriptor in des1
+    for i in range(des1.shape[0]):
+        # Compute the L2 distance between des1[i] and all descriptors in des2
+        distances = np.linalg.norm(des2 - des1[i], axis=1)
+        # Find the index of the descriptor in des2 with the smallest distance
+        index[i] = np.argmin(distances)
 
     return index
 

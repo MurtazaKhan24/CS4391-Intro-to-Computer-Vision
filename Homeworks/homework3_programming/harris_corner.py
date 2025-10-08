@@ -15,10 +15,19 @@ import matplotlib.pyplot as plt
 # idea: for each pixel, check its 8 neighborhoods in the image. If the pixel is the maximum compared to these
 # 8 neighborhoods, mark it as a corner with value 1. Otherwise, mark it as non-corner with value 0
 def non_maximum_suppression(R):
+    # Initialize the mask with zeros
+    mask = np.zeros_like(R, dtype=np.uint8)
 
+    # Iterate through each pixel in the matrix
+    for i in range(1, R.shape[0] - 1):
+        for j in range(1, R.shape[1] - 1):
+            # Extract the 3x3 neighborhood
+            neighborhood = R[i - 1:i + 2, j - 1:j + 2]
+            # Check if the center pixel is the maximum in its neighborhood
+            if R[i, j] == np.max(neighborhood) and R[i, j] > 0:
+                mask[i, j] = 1
 
     return mask
-
 
 #TODO: implement this function
 # input: im is an RGB image with shape [height, width, 3]
@@ -28,23 +37,31 @@ def non_maximum_suppression(R):
 def harris_corner(im):
 
     # step 0: convert RGB to gray-scale image
-
+    gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+    gray = np.float32(gray)
     
     # step 1: compute image gradient using Sobel filters
     # https://opencv24-python-tutorials.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_gradients/py_gradients.html
-
+    Ix = cv2.Sobel(gray, cv2.CV_64F, 1, 0, ksize=3)
+    Iy = cv2.Sobel(gray, cv2.CV_64F, 0, 1, ksize=3)
 
     # step 2: compute products of derivatives at every pixels
-
+    Ixx = Ix * Ix
+    Iyy = Iy * Iy
+    Ixy = Ix * Iy
 
     # step 3: compute the sums of products of derivatives at each pixel using Gaussian filter (window size: 5x5, sigma = 1.5) from OpenCV
-
+    Ixx = cv2.GaussianBlur(Ixx, (5, 5), sigmaX=1.5)
+    Iyy = cv2.GaussianBlur(Iyy, (5, 5), sigmaX=1.5)
+    Ixy = cv2.GaussianBlur(Ixy, (5, 5), sigmaX=1.5)
 
     # step 4: compute determinant and trace of the M matrix
-
+    det_M = Ixx * Iyy - Ixy * Ixy
+    trace_M = Ixx + Iyy
     
     # step 5: compute R scores with k = 0.05
     k = 0.05
+    R = det_M - k * (trace_M ** 2)
 
     
     # step 6: thresholding
