@@ -28,16 +28,16 @@ parser.add_argument(
 
 def main(args):
     # How much data to use for training
-    num_train = 45000
+    num_train = 38000
 
     # Model architecture hyperparameters.
-    hidden_dim = 128
+    hidden_dim = 32
 
     # Optimization hyperparameters.
     batch_size = 128
-    num_epochs = 35
-    learning_rate = 5e-3
-    reg = 1e-3
+    num_epochs = 30
+    learning_rate = 4e-3
+    reg = 0.001
 
     ###########################################################################
     # TODO: Set hyperparameters for training your model. You can change any   #
