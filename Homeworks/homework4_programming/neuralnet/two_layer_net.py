@@ -11,7 +11,7 @@ class TwoLayerNet(Classifier):
     input -> FC layer -> ReLU layer -> FC layer -> scores
     """
     def __init__(self, input_dim=3072, num_classes=10, hidden_dim=512,
-                 weight_scale=1e-3):
+                 weight_scale=1e-2):
         """
         Initialize a new two layer network.
 

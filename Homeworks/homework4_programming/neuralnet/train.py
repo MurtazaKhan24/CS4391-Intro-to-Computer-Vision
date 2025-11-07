@@ -31,12 +31,12 @@ def main(args):
     num_train = 38000
 
     # Model architecture hyperparameters.
-    hidden_dim = 32
+    hidden_dim = 128
 
     # Optimization hyperparameters.
     batch_size = 128
-    num_epochs = 30
-    learning_rate = 4e-3
+    num_epochs = 40
+    learning_rate = 5e-3
     reg = 0.001
 
     ###########################################################################
@@ -143,7 +143,6 @@ def plot_stats(stats, filename):
     plt.gcf().set_size_inches(12, 4)
     plt.savefig(filename, bbox_inches='tight')
     plt.clf()
-
 
 if __name__ == '__main__':
     main(parser.parse_args())
